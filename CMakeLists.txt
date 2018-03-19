@@ -44,7 +44,8 @@ include_directories(
   ${EIGEN3_INCLUDE_DIR}
 )
 
-add_library(hiqp_demos_plugins src/tdyn_pd_controller.cpp src/tdef_x_axis.cpp)
+add_library(hiqp_demos_plugins src/tdyn_pd_controller.cpp src/tdef_x_axis.cpp src/tdyn_impedance.cpp)
+
 add_dependencies(hiqp_demos_plugins ${catkin_EXPORTED_TARGETS})
 target_link_libraries(hiqp_demos_plugins ${catkin_LIBRARIES})
 

@@ -46,7 +46,7 @@ public:
 
 protected:
   double k_p_; ///< Controller proportional gain
-  double k_d_; ///< Controller derivative gain  
+  double k_d_; ///< Controller derivative gain
 
 private:
   TDynPDController(const TDynPDController &other) = delete;

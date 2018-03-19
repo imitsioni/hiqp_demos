@@ -62,10 +62,10 @@ int TDynPDController::init(const std::vector<std::string> &parameters,
   k_p_ = std::stod(parameters.at(1));
 
   // read the derivative gain
-  k_d_ = std::stod(parameters.at(2));  
+  k_d_ = std::stod(parameters.at(2));
 
   // initialize the controller
-  e_ddot_star_ = -k_p_ * e_initial -k_d_ * e_dot_initial; // we control the error in acceleration
+  e_ddot_star_ = -k_p_ * e_initial - k_d_ * e_dot_initial; // we control the error in acceleration
   performance_measures_.resize(dim); // custom performance measures (need not be implemented)
 
   return 0;

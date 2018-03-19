@@ -39,16 +39,16 @@ int TDefXAxis::init(const std::vector<std::string> &parameters,
                      std::to_string(size) + "! Initialization failed!");
     return -1;
   }
-  ee_frame_ = parameters.at(1); //read the ee frame id 
-  
+  ee_frame_ = parameters.at(1); //read the ee frame id
+
   task_signs_.insert(task_signs_.begin(), 1, 0); //equality task (0)
   performance_measures_.resize(0);  //no custom performance measure needed
 
   unsigned int n_joints = robot_state->getNumJoints();
   //Our operational space is the scalar along the x-axis, therefore task error/error derivative are scalar and the Jacobian/Jacobian derivative are in \mathbb{R}^{1 \times n}
-  e_=Eigen::VectorXd::Zero(1);  
+  e_=Eigen::VectorXd::Zero(1);
   e_dot_=Eigen::VectorXd::Zero(1);
-  J_=Eigen::MatrixXd::Zero(1,n_joints);      
+  J_=Eigen::MatrixXd::Zero(1,n_joints);
   J_dot_=Eigen::MatrixXd::Zero(1,n_joints);
   f_=Eigen::VectorXd::Zero(1); //f is a possible exogeneous task quantity, e.g., for external force
 
@@ -57,7 +57,7 @@ int TDefXAxis::init(const std::vector<std::string> &parameters,
 	std::make_shared<KDL::TreeFkSolverPos_recursive>(robot_state->kdl_tree_);
       fk_solver_jac_ =
 	std::make_shared<KDL::TreeJntToJacSolver>(robot_state->kdl_tree_);
-  
+
   return 0; //returning 0 indicates success
 }
 //==================================================================================
@@ -65,8 +65,8 @@ int TDefXAxis::update(RobotStatePtr robot_state) {
      int retval = 0;
      KDL::Frame ee_pose;
      KDL::Jacobian ee_jac;
-     KDL::Jacobian ee_jac_dot;     
-     
+     KDL::Jacobian ee_jac_dot;
+
    //compute forward kinematics to get the current position of the end effector
       retval = fk_solver_pos_->JntToCart(robot_state->kdl_jnt_array_vel_.q, ee_pose,
 					 ee_frame_);
@@ -106,12 +106,12 @@ int TDefXAxis::update(RobotStatePtr robot_state) {
       }
 
       Eigen::Vector3d x(1,0,0);
-      
+
       e_(0)=ee_pose.p.x(); //task error is the pose x value
       J_=x.transpose()*ee_jac.data.topRows<3>(); //task Jacobian is the projection of the ee Jacobian onto the x axis
       J_dot_=x.transpose()*ee_jac_dot.data.topRows<3>();
-      e_dot_=J_*robot_state->kdl_jnt_array_vel_.qdot.data; 
-      
+      e_dot_=J_*robot_state->kdl_jnt_array_vel_.qdot.data;
+
       return 0;
 }
 //==================================================================================
