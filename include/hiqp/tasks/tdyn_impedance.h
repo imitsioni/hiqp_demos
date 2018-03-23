@@ -58,11 +58,6 @@ namespace hiqp{
 
 
     private:
-    Eigen::Matrix<double, 6, 1> measured_F;
-    ros::NodeHandle nh_;
-    ros::Subscriber wrench_sub;
-    void FTcallback(const geometry_msgs::WrenchStamped& msg);
-
 
     TDynImpedance(const TDynImpedance& other) = delete;
     TDynImpedance(TDynImpedance&& other) = delete;

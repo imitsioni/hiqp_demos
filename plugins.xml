@@ -13,6 +13,12 @@
     </description>
   </class>
   
+    <class type="hiqp::tasks::TDefFT" base_class_type="hiqp::TaskDefinition">
+    <description>
+      A plugin for projecting forces from a point to a plane.
+    </description>
+  </class>
+  
   <class type="hiqp::tasks::TDynImpedance" base_class_type="hiqp::TaskDynamics">
     <description>
       A plugin for a simple Impedance Controller.

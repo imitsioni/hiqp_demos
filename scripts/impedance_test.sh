@@ -29,14 +29,14 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   frame_id: 'yumi_body'
   visible: false
   color: [1.0, 1.0, 1.0, 0.6]
-  parameters: [1.0, 0.0, 0.0, 0.35]
+  parameters: [1.0, 0.0, 0.0, 0.4]
 
 - name: 'y_plane'
   type: 'plane'
   frame_id: 'yumi_body'
   visible: false
   color: [1.0, 3.0, 1.0, 0.6]
-  parameters: [0.0, 1.0, 0.0, -0.2]
+  parameters: [0.0, 1.0, 0.0, -0.25]
 
 - name: 'tabletop_plane'
   type: 'plane'
@@ -73,8 +73,16 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
     active: 1
     monitored: 1
     def_params: ['TDefGeomProj', 'point', 'plane', 'knife_middle_point = tabletop_plane']
-    dyn_params: ['TDynImpedance', '2.0', '3.0', '1.0']
-    # dyn_params: ['TDynPD', '2.0', '3.0']
+  #  dyn_params: ['TDynImpedance', '2.0', '3.0', '1.0']
+    dyn_params: ['TDynPD', '2.0', '3.0']
+
+  # - name: 'neutral_pose'
+  #   priority: 3
+  #   visible: 1
+  #   active: 1
+  #   monitored: 1
+  #   def_params: ['TDefFullPose']
+  #   dyn_params: ['TDynPD', '1.0', '2.0']
     "
 
 

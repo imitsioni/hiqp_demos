@@ -44,10 +44,6 @@ namespace hiqp{
 
 
 
-       /*  ======================   DESTROY
-       */
-      wrench_sub = nh_.subscribe(wrench_topic, 10, &TDynImpedance::FTcallback);
-
       if ((size != 3 * dim * dim + 1) && (size != 4)) {
         printHiqpWarning("TDynImpedance for a " + std::to_string(dim) +
                          "-dimensional task requires either " +
@@ -119,39 +115,21 @@ namespace hiqp{
       //                              return -1;
       //                            }
 
-
       // TODO change it to init through base class
       e_ddot_star_ = B_inv_ * (-k_p_ * e_initial - k_d_ * e_dot_initial);
 
-      /* ============================ DESTROY
-      */
-      nh_ = ros::NodeHandle();
-
       return 0;
     }
-
-// =================================================================
-  void TDynImpedance::FTcallback(const geometry_msgs::WrenchStamped& msg){
-      Eigen::Matrix<double, 6, 1> Wrench_fts_frame;
-
-      Wrench_fts_frame << msg.wrench.force.x,  msg.wrench.force.y,
-                          msg.wrench.force.z,  msg.wrench.torque.x,
-                          msg.wrench.torque.y, msg.wrench.torque.z;
-      // tf::wrenchMsgtoEigen(msg, Wrench_fts_frame)
-
-      // TODO 1) get rotation matrix so F_tip = Rotation_matrix * F_measured
-     //       2) get the normal plane, F_task = n.transpose * n * F_point
-     //
-  }
 
 
   int TDynImpedance::update(const RobotStatePtr robot_state,
                                   const std::shared_ptr<TaskDefinition> def) {
       // System equation
-      // e_ddot_star_ =  B_inv_ * (-k_p_ * def->getTaskValue() - k_d_ * def->getTaskDerivative() +
-      //                 def->getExogeneousTaskQuantities());
+      std::cout << "Updating the controller \n";
       e_ddot_star_ =  B_inv_ * (-k_p_ * def->getTaskValue() - k_d_ * def->getTaskDerivative() +
-                      measured_F);
+                      def-> getExogeneousTaskQuantities());
+
+      // std::cout<< def-> getExogeneousTaskQuantities();
       return 0;
      }
 

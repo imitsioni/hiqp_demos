@@ -20,7 +20,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   frame_id: 'yumi_body'
   visible: true
   color: [1.0, 0.0, 1.0, 1.0]
-  parameters: [0.4, -0.25 , 0.15 , 0.0  , 1.57, 1.57]
+  parameters: [0.4, -0.25 , 0.35 , 0.0  , 1.57, 1.57]
 
   "
 

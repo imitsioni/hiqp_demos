@@ -29,12 +29,13 @@ find_package(Eigen3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   hiqp_core
   pluginlib
+  geometry_msgs
 )
 
 # find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS hiqp_core pluginlib 
+  CATKIN_DEPENDS hiqp_core pluginlib
 #  DEPENDS system_lib
 )
 
@@ -44,8 +45,7 @@ include_directories(
   ${EIGEN3_INCLUDE_DIR}
 )
 
-add_library(hiqp_demos_plugins src/tdyn_pd_controller.cpp src/tdef_x_axis.cpp src/tdyn_impedance.cpp)
+add_library(hiqp_demos_plugins src/tdyn_pd_controller.cpp src/tdef_x_axis.cpp src/tdyn_impedance.cpp src/tdef_ft.cpp )
 
 add_dependencies(hiqp_demos_plugins ${catkin_EXPORTED_TARGETS})
 target_link_libraries(hiqp_demos_plugins ${catkin_LIBRARIES})
-
