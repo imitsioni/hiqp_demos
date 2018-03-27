@@ -125,11 +125,11 @@ namespace hiqp{
   int TDynImpedance::update(const RobotStatePtr robot_state,
                                   const std::shared_ptr<TaskDefinition> def) {
       // System equation
-      std::cout << "Updating the controller \n";
+      // std::cout << "Updating the controller \n";
       e_ddot_star_ =  B_inv_ * (-k_p_ * def->getTaskValue() - k_d_ * def->getTaskDerivative() +
                       def-> getExogeneousTaskQuantities());
 
-      // std::cout<< def-> getExogeneousTaskQuantities();
+      // std::cout<< "force I'm reading is : "<< def-> getExogeneousTaskQuantities()<< '\n';
       return 0;
      }
 

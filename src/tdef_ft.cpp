@@ -244,19 +244,20 @@ int TDefFT::update(RobotStatePtr robot_state) {
     Eigen::Vector3d n = Eigen::Map<Eigen::Vector3d>((pose_b_.M * plane->getNormalKDL()).data); // plane normal expressed in the world frame
     Eigen::Matrix<double, 3,3> plane_projection;
     plane_projection = n * n.transpose(); // 3x3
-    std::cout << "------------------------------------------------------" <<'\n';
-    std::cout<<"Plane normal " << n << '\n';
-    std::cout<< "Plane projection matrix " << '\n';
-    std::cout << plane_projection << '\n';
-    std::cout << "Force (actual) I'm reading is " <<'\n';
-    std::cout << Wrench_fts_frame.topRows(3) << '\n';
+    // DEBUG
+    // std::cout << "------------------------------------------------------" <<'\n';
+    // std::cout<<"Plane normal " << n << '\n';
+    // std::cout<< "Plane projection matrix " << '\n';
+    // std::cout << plane_projection << '\n';
+    // std::cout << "Force (actual) I'm reading is " <<'\n';
+    // std::cout << Wrench_fts_frame.topRows(3) << '\n';
     temp_force = plane_projection * Wrench_fts_frame.topRows(3);
-    std::cout << "Force (projected) I'm reading is " <<'\n';
-    std::cout << temp_force << '\n';
+    // std::cout << "Force (projected) I'm reading is " <<'\n';
+    // std::cout << temp_force << '\n';
     // f_ = Eigen::Vector3d(temp_force);
-    f_ << temp_force[2], 0;
-    std::cout << "Force I'm sending is " <<'\n';
-    std::cout << f_ << ',' << f_.size() << '\n';
+    f_ << temp_force[2];
+    // std::cout << "Force I'm sending is " <<'\n';
+    // std::cout << f_ << ',' << f_.size() << '\n';
 
     return 0;
 
