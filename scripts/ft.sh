@@ -39,7 +39,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_tasks \
   monitored: 1
   # def_params: ['TDefGeomProj', 'point', 'plane', 'knife_middle_point = tabletop_plane']
   def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
-  dyn_params: ['TDynImpedance', '5.0', '10.0', '1.0']
+  dyn_params: ['TDynImpedance', '200.0', '15.0', '1.0']
   # dyn_params: ['TDynPD', '5.0', '8.0']
 
 - name: 'jnt7'

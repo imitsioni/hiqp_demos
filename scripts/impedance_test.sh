@@ -22,7 +22,8 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   frame_id: 'gripper_r_base'
   visible: true
   color: [1.0, 0.0, 1.0, 1.0]
-  parameters: [0.0, 0.0, 0.08]
+  # parameters: [0.0, 0.0, 0.08]
+  parameters: [0.0, 0.0, 0.0]
 
 - name: 'x_plane'
   type: 'plane'
@@ -72,9 +73,11 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
     visible: 0
     active: 1
     monitored: 1
-    def_params: ['TDefGeomProj', 'point', 'plane', 'knife_middle_point = tabletop_plane']
+    # def_params: ['TDefGeomProj', 'point', 'plane', 'knife_middle_point = tabletop_plane']
   #  dyn_params: ['TDynImpedance', '2.0', '3.0', '1.0']
-    dyn_params: ['TDynPD', '2.0', '3.0']
+    # dyn_params: ['TDynPD', '2.0', '3.0']
+    def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
+    dyn_params: ['TDynImpedance', '25.0', '8.0', '1.0']
 
   # - name: 'neutral_pose'
   #   priority: 3
@@ -89,7 +92,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
 
 
 #  remove the initialization
-  rosservice call /yumi/hiqp_joint_velocity_controller/remove_tasks \
-  "names:
-   - 'frame_tracking'
-    "
+  # rosservice call /yumi/hiqp_joint_velocity_controller/remove_tasks \
+  # "names:
+  #  - 'frame_tracking'
+  #   "

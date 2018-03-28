@@ -46,7 +46,7 @@ int TDefFT::init(const std::vector<std::string> &parameters,
   J_ = Eigen::MatrixXd::Zero(1,n_joints);
   J_dot_ = Eigen::MatrixXd::Zero(1,n_joints);
   f_ = Eigen::VectorXd::Zero(1); //f is a possible exogeneous task quantity, e.g., for external force
-  std::cout<< "size" << f_.size();
+  // std::cout<< "size" << f_.size();
 //set up forward kinematics and Jacobian solvers using the kinematic tree read from the urdf file
     fk_solver_pos_ =
 std::make_shared<KDL::TreeFkSolverPos_recursive>(robot_state->kdl_tree_);
