@@ -8,19 +8,12 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   color: [1.0, 0.0, 0.0, 1.0]
   parameters: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
-# - name: 'init_frame'
-#   type: 'frame'
-#   frame_id: 'yumi_body'
-#   visible: true
-#   color: [1.0, 0.0, 1.0, 1.0]
-#   parameters: [0.35, -0.2 , 0.15 , 1.57  , 3.14 , 0.0]
-
 - name: 'init_frame2'
   type: 'frame'
   frame_id: 'yumi_body'
   visible: true
   color: [1.0, 0.0, 1.0, 1.0]
-  parameters: [0.4, -0.25 , 0.35 , 0.0  , 1.57, 1.57]
+  parameters: [0.4, -0.25 , 0.3 , 0.0  , 1.57, 1.57]
 
 - name: 'knife_middle_point'
   type: 'point'
@@ -35,8 +28,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   frame_id: 'yumi_body'
   visible: true
   color: [1.0, 0.0, 1.0, 0.6]
-  # parameters: [0.0, 0.0, 1.0, 0.07]
-  parameters: [0.0, 0.0, 1.0, 0.15]
+  parameters: [0.0, 0.0, 1.0, 0.3]
    "
 
 
@@ -49,15 +41,15 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
     active: 1
     monitored: 1
     def_params: ['TDefTracking', 'frame', 'frame', 'init_frame2 = wrist_frame']
-    dyn_params: ['TDynPD', '1.0', '2.0']
+    dyn_params: ['TDynPD', '4.0', '2.0']
 
-  # - name: 'table_projection'
-  #   priority: 2
-  #   visible: 0
-  #   active: 1
-  #   monitored: 1
-  #   def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
-  #   dyn_params: ['TDynImpedance', '35.0', '10.0', '10.0']
+  - name: 'table_projection'
+    priority: 2
+    visible: 0
+    active: 1
+    monitored: 1
+    def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
+    dyn_params: ['TDynImpedance', '30.0', '10.0', '5.0']
 
   - name: 'full_pose'
     priority: 3

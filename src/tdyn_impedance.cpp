@@ -55,8 +55,8 @@ namespace hiqp{
 
 
       // read the gains and the desired inertia matrix
-       k_p_ = std::stod(parameters.at(1));
-       k_d_ = std::stod(parameters.at(2));
+      k_p_ = std::stod(parameters.at(1));
+      k_d_ = std::stod(parameters.at(2));
 
       Eigen::MatrixXd B;
       std::vector<std::string> tdyn_pd_parameters;
@@ -64,6 +64,8 @@ namespace hiqp{
 
       if (size == 4) {
         B = Eigen::MatrixXd::Identity(dim, dim) * std::stod(parameters.at(3));
+        // std::cout<<"Inertia matrix is " << B;
+
         // extract the parameters for the base class
         for (unsigned int i = 0; i < size - 1; i++)
           tdyn_pd_parameters.push_back(parameters.at(i));
@@ -89,10 +91,8 @@ namespace hiqp{
         printHiqpWarning("The given desired inertia matrix B is not positive "
                          "definite! Initialization of TDynImpedance object "
                          "failed!");
-
         return -1;
       }
-
       // Checking for symmetry
       if (B != B.transpose()){
         printHiqpWarning("The given desired inertia matrix B is not symmetric."
@@ -102,12 +102,29 @@ namespace hiqp{
       }
 
       B_inv_ = pinv(B);
+      // std::cout<< "= = = = = = = = = = = = = = = = = \n" ;
+      // std::cout << k_p_ << '\n' << k_d_ << '\n';
+      // std::cout<< "= = = = = = = = = = = = = = = = = \n" ;
+      // std::cout<<B * k_p_;
+      // std::cout<< "= = = = = = = = = = = = = = = = = \n" ;
+      // std::cout<<B_inv_ * k_d_ ;
+      // std::cout<< "= = = = = = = = = = = = = = = = = \n" ;
+      // std::std::cout << 2.0 * sqrt(B * k_p_) << '\n';
 
 
       double temp1 = std::stod(parameters.at(3));
       if ((k_d_ /temp1) < 2.0 * sqrt(k_p_ * temp1)){
         printHiqpWarning("The system is underdamped");
+        std::cout << "Hijacking the system and changing K_d so the system has z = 1 " << '\n';
+        std::cout << "Previously : " << k_d_ << " is now : " << '\n';
+        k_d_ = 2.0 * temp1 * sqrt(temp1 * k_p_);
+        std::cout << k_d_;
+
       }
+
+      // if ((k_d_ * B_inv_) < 2.0 * sqrt(k_p_ * B)){
+      //   printHiqpWarning("The system is underdamped yet again");
+      // }
 
       // // // initialize the controller through initialization of the base class
       // if (TDynPDController::init(tdyn_pd_parameters, robot_state, e_dot_initial,

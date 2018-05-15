@@ -33,10 +33,25 @@ public:
 
   int init(const std::vector<std::string> &parameters,
            RobotStatePtr robot_state);
-
+  /* This function :
+   *                 * Parses the arguments from the task definition (sensor frame included)
+   *                 * Subscribes to the force reading wrench_topic
+   *                 * Initializes explicitly the main class (TDefGeometricProjection)
+   *                           /TODO remove the extra code, initialize it like a normal human being
+   *                 * Sets up the fk and jacobian solvers
+   */
   int update(RobotStatePtr robot_state);
+ /* This function : * Gets cartesian poses from the primitives in task definition
+  *                 * Gets the jacobians for the primitives in task definition
+  *                 * Gets the derivatives of the jacobians for the primitives in task definition
+  *                 * Updates explicitly the main class (TDefGeometricProjection)
+  *                           /TODO remove the extra code, update it like a normal human being
+  *                 * Transform primitives to world frame
+  *                 * Projects forces
+  *                           /TODO add the knife_frame to tf 
+  */
+  int monitor(); // Does nothing for the time being
 
-  int monitor();
 
 protected:
    std::shared_ptr<GeometricPoint> primitive_a_;
@@ -63,13 +78,22 @@ private:
   ros::NodeHandle nh_;
   ros::Subscriber wrench_sub;
   void FTcallback(const geometry_msgs::WrenchStamped& msg);
+  // The callback function for the wrench wrench_topic
+
   int projectForces(std::shared_ptr<GeometricPoint>  point,
                     std::shared_ptr<GeometricPlane> plane,
                     const RobotStatePtr robot_state);
+  /* This function : * Expresses the received _FORCE_ in the world frame
+   *                 * Expresses the plane normal (primitive b) in the world frame
+   *                 * Sets a hardcoded plane_projection matrix by n*n^T
+   *                           /TODO do it through the base class method
+   *                 * Sets f_ as the projected force for the TDyn
+   */
 
   std::shared_ptr<KDL::TreeFkSolverPos_recursive> fk_solver_pos_;
   std::shared_ptr<KDL::TreeJntToJacSolver> fk_solver_jac_;
   std::string sensor_frame_;
+
 };
 
 } // namespace tasks

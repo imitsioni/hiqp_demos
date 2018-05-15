@@ -25,7 +25,7 @@ int TDefFT::init(const std::vector<std::string> &parameters,
     return -1;
   }
 
- // Initialization of the base class (geometric projection) ------
+  // Initialization of the base class (geometric projection) ------
 
   std::stringstream ss(parameters.at(4));
   std::vector<std::string> args(std::istream_iterator<std::string>{ss},
@@ -46,35 +46,35 @@ int TDefFT::init(const std::vector<std::string> &parameters,
   J_ = Eigen::MatrixXd::Zero(1,n_joints);
   J_dot_ = Eigen::MatrixXd::Zero(1,n_joints);
   f_ = Eigen::VectorXd::Zero(1); //f is a possible exogeneous task quantity, e.g., for external force
-  // std::cout<< "size" << f_.size();
-//set up forward kinematics and Jacobian solvers using the kinematic tree read from the urdf file
-    fk_solver_pos_ =
-std::make_shared<KDL::TreeFkSolverPos_recursive>(robot_state->kdl_tree_);
-    fk_solver_jac_ =
-std::make_shared<KDL::TreeJntToJacSolver>(robot_state->kdl_tree_);
 
-std::shared_ptr<GeometricPrimitiveMap> gpm = this->getGeometricPrimitiveMap();
+  //set up forward kinematics and Jacobian solvers using the kinematic tree read from the urdf file
+  fk_solver_pos_ =
+      std::make_shared<KDL::TreeFkSolverPos_recursive>(robot_state->kdl_tree_);
+  fk_solver_jac_ =
+      std::make_shared<KDL::TreeJntToJacSolver>(robot_state->kdl_tree_);
 
-    primitive_a_ = gpm->getGeometricPrimitive<GeometricPoint>(args.at(0));
-    if (primitive_a_ == nullptr) {
-printHiqpWarning(
-		 "In TDefGeometricProjection::init(), couldn't find primitive with name "
-		 "'" +
-		 args.at(0) + "'. Unable to create task!");
-return -3;
-    }
+  std::shared_ptr<GeometricPrimitiveMap> gpm = this->getGeometricPrimitiveMap();
 
-    primitive_b_ = gpm->getGeometricPrimitive<GeometricPlane>(args.at(2));
-    if (primitive_b_ == nullptr) {
-printHiqpWarning(
-		 "In TDefGeometricProjection::init(), couldn't find primitive with name "
-		 "'" +
-		 args.at(2) + "'. Unable to create task!");
-return -3;
-    }
+  primitive_a_ = gpm->getGeometricPrimitive<GeometricPoint>(args.at(0));
+  if (primitive_a_ == nullptr) {
+      printHiqpWarning(
+  	 "In TDefGeometricProjection::init(), couldn't find primitive with name "
+  	 "'" +
+  	 args.at(0) + "'. Unable to create task!");
+     return -3;
+      }
 
-    gpm->addDependencyToPrimitive(args.at(0), this->getTaskName());
-    gpm->addDependencyToPrimitive(args.at(2), this->getTaskName());
+  primitive_b_ = gpm->getGeometricPrimitive<GeometricPlane>(args.at(2));
+  if (primitive_b_ == nullptr) {
+      printHiqpWarning(
+  	 "In TDefGeometricProjection::init(), couldn't find primitive with name "
+  	 "'" +
+  	 args.at(2) + "'. Unable to create task!");
+     return -3;
+      }
+
+  gpm->addDependencyToPrimitive(args.at(0), this->getTaskName());
+  gpm->addDependencyToPrimitive(args.at(2), this->getTaskName());
 
   return 0; //returning 0 indicates success
 }
@@ -82,33 +82,31 @@ return -3;
 
 //========================================================================
 int TDefFT::update(RobotStatePtr robot_state) {
-// std::cout<<"Update\n" ;
-
-// =======================================================================
-//               Updating the base class (geometric projection)
-//========================================================================
-  int retval = 0;
+ // Updating the base class (geometric projection)
+ int retval = 0;
 
   retval = fk_solver_pos_->JntToCart(robot_state->kdl_jnt_array_vel_.q, pose_a_,
        primitive_a_->getFrameId());
+
+
   if (retval != 0) {
   std::cerr << "In TDefGeometricProjection::update : Can't solve position "
-    << "of link '" << primitive_a_->getFrameId() << "'"
-    << " in the "
-    << "KDL tree! KDL::TreeFkSolverPos_recursive::JntToCart return "
-    << "error code '" << retval << "'\n";
-  return -1;
+            << "of link '" << primitive_a_->getFrameId() << "'"
+            << " in the "
+            << "KDL tree! KDL::TreeFkSolverPos_recursive::JntToCart return "
+            << "error code '" << retval << "'\n";
+          return -1;
     }
 
-    retval = fk_solver_pos_->JntToCart(robot_state->kdl_jnt_array_vel_.q, pose_b_,
-         primitive_b_->getFrameId());
-    if (retval != 0) {
+  retval = fk_solver_pos_->JntToCart(robot_state->kdl_jnt_array_vel_.q, pose_b_,
+       primitive_b_->getFrameId());
+  if (retval != 0) {
   std::cerr << "In TDefGeometricProjection::update : Can't solve position "
-    << "of link '" << primitive_b_->getFrameId() << "'"
-    << " in the "
-    << "KDL tree! KDL::TreeFkSolverPos_recursive::JntToCart return "
-    << "error code '" << retval << "'\n";
-  return -2;
+            << "of link '" << primitive_b_->getFrameId() << "'"
+            << " in the "
+            << "KDL tree! KDL::TreeFkSolverPos_recursive::JntToCart return "
+            << "error code '" << retval << "'\n";
+          return -2;
     }
 
     jacobian_a_.resize(robot_state->kdl_jnt_array_vel_.q.rows());
@@ -212,61 +210,52 @@ int TDefFT::update(RobotStatePtr robot_state) {
               e_dot_.setZero();
     }
 
-      /* ======================================================================
-                Extremely unwise, harcoded stuff that should be changed
-        ====================================================================== */
-
-     // Eigen::Vector3d plane_normal;
-     // plane_normal << 0, 0, 1;
-     // Eigen::Matrix<double, 3,3> plane_projection;
-     // plane_projection = plane_normal * plane_normal.transpose();
-
-     // Eigen::Vector3d force = Eigen::Map<Eigen::Vector3d>((pose_fts_.M * KDL::Vector(Wrench_fts_frame(0), Wrench_fts_frame(1), Wrench_fts_frame(2))).data); // measured force expressed in the world frame
-
-   //compute forward kinematics to get the current position of the end effector
-      // retval = fk_solver_pos_->JntToCart(robot_state->kdl_jnt_array_vel_.q, ee_pose,
-			// 		 sensor_frame_);
-
   return 0;
  }
 
-  int TDefFT::projectForces(std::shared_ptr<GeometricPoint> point,
+int TDefFT::projectForces(std::shared_ptr<GeometricPoint> point,
                     std::shared_ptr<GeometricPlane> plane,
                     const RobotStatePtr robot_state){
-    /* ======================================================================
-              Extremely unwise, harcoded stuff that should be changed
-      ====================================================================== */
-   // DANGER: this will only work if primitive_a_ is the FT frame
-    // Eigen::Matrix<double,3,1> temp_force;
-    Eigen::Vector3d temp_force;
-    // temp_force << Wrench_fts_frame(0), Wrench_fts_frame(1), Wrench_fts_frame(2);
 
+      // Eigen::Matrix<double,3,1> temp_force;
+    Eigen::Vector3d temp_force, temp_fforce;
+    // temp_force << Wrench_fts_frame(0), Wrench_fts_frame(1), Wrench_fts_frame(2);
+    Eigen::Vector3d fforce = Eigen::Map<Eigen::Vector3d>((pose_a_.M * KDL::Vector(Wrench_fts_frame[0],Wrench_fts_frame[1], Wrench_fts_frame[2])).data); // measured force expressed in the world frame
     Eigen::Vector3d n = Eigen::Map<Eigen::Vector3d>((pose_b_.M * plane->getNormalKDL()).data); // plane normal expressed in the world frame
+
     Eigen::Matrix<double, 3,3> plane_projection;
     plane_projection = n * n.transpose(); // 3x3
-    // DEBUG
-    // std::cout << "------------------------------------------------------" <<'\n';
-    // std::cout<<"Plane normal " << n << '\n';
-    // std::cout<< "Plane projection matrix " << '\n';
-    // std::cout << plane_projection << '\n';
-    // std::cout << "Force (actual) I'm reading is " <<'\n';
-    // std::cout << Wrench_fts_frame.topRows(3) << '\n';
+    // // DEBUG
+    std::cout << "------------------------------------------------------" <<'\n';
+    std::cout<< "Plane normal " << n << '\n';
+    std::cout<< "Plane projection matrix " << '\n';
+    std::cout << plane_projection << '\n';
+    std::cout << "Force (actual) I'm reading is " <<'\n';
+    std::cout << Wrench_fts_frame.topRows(3) << '\n';
     temp_force = plane_projection * Wrench_fts_frame.topRows(3);
-    // std::cout << "Force (projected) I'm reading is " <<'\n';
-    // std::cout << temp_force << '\n';
+
+    temp_fforce = plane_projection * fforce;
+
+    std::cout << "Force (projected) I'm reading is " <<'\n';
+    std::cout << temp_force << '\n';
+    std::cout << "Force (rotated, i think) I'm reading is " <<'\n';
+    std::cout << fforce << '\n';
     // f_ = Eigen::Vector3d(temp_force);
-    f_ << temp_force[2];
-    // std::cout << "Force I'm sending is " <<'\n';
+    f_ << temp_fforce[2];
+    std::cout << "Force I'm sending is " <<'\n';
     // std::cout << f_ << ',' << f_.size() << '\n';
+    std::cout << f_ << "\n VS " << '\n';
+    std::cout << temp_fforce << '\n';
+    std::cout << "------------------------------------------------------" <<'\n';
 
     return 0;
 
 
 }
 
-
 // =================================================================
   void TDefFT::FTcallback(const geometry_msgs::WrenchStamped& msg){
+
       Wrench_fts_frame << msg.wrench.force.x,  msg.wrench.force.y,
                           msg.wrench.force.z,  msg.wrench.torque.x,
                           msg.wrench.torque.y, msg.wrench.torque.z;

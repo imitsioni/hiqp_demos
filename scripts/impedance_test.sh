@@ -44,7 +44,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   frame_id: 'yumi_body'
   visible: true
   color: [1.0, 0.0, 1.0, 0.6]
-  parameters: [0.0, 0.0, 1.0, 0.07]
+  parameters: [0.0, 0.0, 1.0, 0.1]
   "
 
   #source joint_configuration.sh
@@ -77,15 +77,15 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   #  dyn_params: ['TDynImpedance', '2.0', '3.0', '1.0']
     # dyn_params: ['TDynPD', '2.0', '3.0']
     def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
-    dyn_params: ['TDynImpedance', '25.0', '8.0', '1.0']
+    dyn_params: ['TDynImpedance', '30.0', '9.0', '1.0']
 
-  # - name: 'neutral_pose'
-  #   priority: 3
-  #   visible: 1
-  #   active: 1
-  #   monitored: 1
-  #   def_params: ['TDefFullPose']
-  #   dyn_params: ['TDynPD', '1.0', '2.0']
+  - name: 'neutral_pose'
+    priority: 3
+    visible: 1
+    active: 1
+    monitored: 1
+    def_params: ['TDefFullPose']
+    dyn_params: ['TDynPD', '1.0', '2.0']
     "
 
 
