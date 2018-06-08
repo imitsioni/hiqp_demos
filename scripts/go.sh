@@ -2,7 +2,10 @@ rosservice call /yumi/hiqp_joint_velocity_controller/remove_tasks \
 "names:
 - 'frame_tracking'
 - 'table_projection'"
-
+rosservice call /yumi/hiqp_joint_velocity_controller/remove_tasks \
+"names:
+- 'y_projection'
+- 'x_projection'"
 rosservice call /yumi/hiqp_joint_velocity_controller/remove_primitives \
 "names:
 - 'init_frame2'

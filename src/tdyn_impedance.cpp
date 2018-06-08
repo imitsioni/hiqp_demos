@@ -146,6 +146,8 @@ namespace hiqp{
       e_ddot_star_ =  B_inv_ * (-k_p_ * def->getTaskValue() - k_d_ * def->getTaskDerivative() +
                       def-> getExogeneousTaskQuantities());
 
+      std::cout<< "sending " << e_ddot_star_ << '\n';
+      std::cout << "The PD would send " << B_inv_ * (-k_p_ * def->getTaskValue() - k_d_ * def->getTaskDerivative()) << '\n';
       // std::cout<< "force I'm reading is : "<< def-> getExogeneousTaskQuantities()<< '\n';
       return 0;
      }

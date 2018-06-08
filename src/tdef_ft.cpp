@@ -225,28 +225,34 @@ int TDefFT::projectForces(std::shared_ptr<GeometricPoint> point,
 
     Eigen::Matrix<double, 3,3> plane_projection;
     plane_projection = n * n.transpose(); // 3x3
-    // // DEBUG
-    std::cout << "------------------------------------------------------" <<'\n';
-    std::cout<< "Plane normal " << n << '\n';
-    std::cout<< "Plane projection matrix " << '\n';
-    std::cout << plane_projection << '\n';
-    std::cout << "Force (actual) I'm reading is " <<'\n';
-    std::cout << Wrench_fts_frame.topRows(3) << '\n';
-    temp_force = plane_projection * Wrench_fts_frame.topRows(3);
-
     temp_fforce = plane_projection * fforce;
+    f_ = temp_fforce.transpose()*n;
 
-    std::cout << "Force (projected) I'm reading is " <<'\n';
-    std::cout << temp_force << '\n';
-    std::cout << "Force (rotated, i think) I'm reading is " <<'\n';
-    std::cout << fforce << '\n';
-    // f_ = Eigen::Vector3d(temp_force);
-    f_ << temp_fforce[2];
-    std::cout << "Force I'm sending is " <<'\n';
-    // std::cout << f_ << ',' << f_.size() << '\n';
-    std::cout << f_ << "\n VS " << '\n';
-    std::cout << temp_fforce << '\n';
-    std::cout << "------------------------------------------------------" <<'\n';
+
+
+    //
+    // // // DEBUG
+    // std::cout << "------------------------------------------------------" <<'\n';
+    // std::cout << " Plane rotation matrix "<<'\n';;
+    // std::cout<< Eigen::Map<Eigen::Matrix3d>((pose_b_.M).data) << '\n';
+    // std::cout<< "Plane normal " << n << '\n';
+    // std::cout<< "Plane projection matrix " << '\n';
+    // std::cout << plane_projection << '\n';
+    // std::cout << "Force (actual) I'm reading is " <<'\n';
+    // std::cout << Wrench_fts_frame.topRows(3) << '\n';
+    // temp_force = plane_projection * Wrench_fts_frame.topRows(3);
+
+    // std::cout << "Force (projected) I'm reading is " <<'\n';
+    // std::cout << temp_force << '\n';
+    // std::cout << "Force (rotated, i think) I'm reading is " <<'\n';
+    // std::cout << fforce << '\n';
+    // // f_ = Eigen::Vector3d(temp_fforce);
+    // // f_ << temp_fforce[2];
+    // std::cout << "Force I'm sending is " <<'\n';
+    // // std::cout << f_ << ',' << f_.size() << '\n';
+    // std::cout << f_ << "\n VS " << '\n';
+    // std::cout << temp_fforce << '\n';
+    // std::cout << "------------------------------------------------------" <<'\n';
 
     return 0;
 
@@ -254,11 +260,11 @@ int TDefFT::projectForces(std::shared_ptr<GeometricPoint> point,
 }
 
 // =================================================================
-  void TDefFT::FTcallback(const geometry_msgs::WrenchStamped& msg){
+  void TDefFT::FTcallback(const geometry_msgs::WrenchStamped::ConstPtr& msg){
 
-      Wrench_fts_frame << msg.wrench.force.x,  msg.wrench.force.y,
-                          msg.wrench.force.z,  msg.wrench.torque.x,
-                          msg.wrench.torque.y, msg.wrench.torque.z;
+      Wrench_fts_frame << msg->wrench.force.x,  msg->wrench.force.y,
+                          msg->wrench.force.z,  msg->wrench.torque.x,
+                          msg->wrench.torque.y, msg->wrench.torque.z;
       // tf::wrenchMsgtoEigen(msg, Wrench_fts_frame)
 
   }

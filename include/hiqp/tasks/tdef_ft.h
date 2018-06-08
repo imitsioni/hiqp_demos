@@ -48,7 +48,7 @@ public:
   *                           /TODO remove the extra code, update it like a normal human being
   *                 * Transform primitives to world frame
   *                 * Projects forces
-  *                           /TODO add the knife_frame to tf 
+  *                           /TODO add the knife_frame to tf
   */
   int monitor(); // Does nothing for the time being
 
@@ -77,7 +77,7 @@ private:
   Eigen::Matrix<double, 6, 1> Wrench_fts_frame;
   ros::NodeHandle nh_;
   ros::Subscriber wrench_sub;
-  void FTcallback(const geometry_msgs::WrenchStamped& msg);
+  void FTcallback(const geometry_msgs::WrenchStamped::ConstPtr& msg);
   // The callback function for the wrench wrench_topic
 
   int projectForces(std::shared_ptr<GeometricPoint>  point,

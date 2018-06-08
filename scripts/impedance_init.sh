@@ -36,7 +36,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   visible: true
   color: [1.0, 0.0, 1.0, 0.6]
   # parameters: [0.0, 0.0, 1.0, 0.07]
-  parameters: [0.0, 0.0, 1.0, 0.15]
+  parameters: [0.0, 0.0, 1.0, 0.25]
    "
 
 
@@ -51,13 +51,13 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
     def_params: ['TDefTracking', 'frame', 'frame', 'init_frame2 = wrist_frame']
     dyn_params: ['TDynPD', '1.0', '2.0']
 
-  # - name: 'table_projection'
-  #   priority: 2
-  #   visible: 0
-  #   active: 1
-  #   monitored: 1
-  #   def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
-  #   dyn_params: ['TDynImpedance', '35.0', '10.0', '10.0']
+  - name: 'table_projection'
+    priority: 2
+    visible: 0
+    active: 1
+    monitored: 1
+    def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
+    dyn_params: ['TDynPD', '2.0', '3.0']
 
   - name: 'full_pose'
     priority: 3
