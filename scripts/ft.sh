@@ -1,11 +1,15 @@
+# This file is paired with stand_still.sh for online testing, mind the K_p
+# Hoping that initializing the motion with the pd controller and then changing the
+# task, might help it transition a bit more smoothly.
+
 rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
 "primitives:
-- name: 'knife_middle_point'
-  type: 'point'
-  frame_id: 'gripper_r_base'
-  visible: true
-  color: [1.0, 0.0, 1.0, 1.0]
-  parameters: [0.0, 0.0, 0.0]
+# - name: 'knife_middle_point'
+#   type: 'point'
+#   frame_id: 'gripper_r_base'
+#   visible: true
+#   color: [1.0, 0.0, 1.0, 1.0]
+#   parameters: [0.0, 0.0, 0.0]
 
 - name: 'x_plane'
   type: 'plane'
@@ -39,7 +43,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_tasks \
   monitored: 1
   # def_params: ['TDefGeomProj', 'point', 'plane', 'knife_middle_point = tabletop_plane']
   def_params: ['TDefFT', 'gripper_r_base', 'point', 'plane', 'knife_middle_point = tabletop_plane' ]
-  dyn_params: ['TDynImpedance', '2.0', '3.0', '1.0']
+  dyn_params: ['TDynImpedance', '200.0', '3.0', '1.0']
   # dyn_params: ['TDynPD', '5.0', '8.0']
 
 - name: 'full_pose'

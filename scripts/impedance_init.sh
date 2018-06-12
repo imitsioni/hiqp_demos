@@ -8,13 +8,6 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
   color: [1.0, 0.0, 0.0, 1.0]
   parameters: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
-# - name: 'init_frame'
-#   type: 'frame'
-#   frame_id: 'yumi_body'
-#   visible: true
-#   color: [1.0, 0.0, 1.0, 1.0]
-#   parameters: [0.35, -0.2 , 0.15 , 1.57  , 3.14 , 0.0]
-
 - name: 'init_frame2'
   type: 'frame'
   frame_id: 'yumi_body'
@@ -48,7 +41,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
     visible: 1
     active: 1
     monitored: 1
-    def_params: ['TDefTracking', 'frame', 'frame', 'init_frame2 = wrist_frame']
+    def_params: ['TDefTracking', 'frame', 'frame', 'wrist_frame = init_frame2 ']
     dyn_params: ['TDynPD', '1.0', '2.0']
 
   - name: 'table_projection'
@@ -65,7 +58,7 @@ rosservice call /yumi/hiqp_joint_velocity_controller/set_primitives \
     active: 1
     monitored: 1
     def_params: ['TDefFullPose', '-1.0', '-1.4', '1.7', '-0.2', '0.0', '1.0', '1.0', '1.0', '-1.4', '-1.7', '-0.2', '0.0', '1.0', '-1.0']
-    dyn_params: ['TDynPD', '0.5 ', '2.0']
+    dyn_params: ['TDynPD', '2.0 ', '3.0']
 
 
    "
